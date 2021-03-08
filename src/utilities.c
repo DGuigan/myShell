@@ -26,3 +26,12 @@ void free_array(char* array[], int start, int end)
     free(array[i]);
   }
 }
+
+void get_function(char* cmd, char* function_names[], int* func_i)
+{
+  *func_i = 0;
+
+  while (function_names[*func_i] != NULL && strncmp(cmd, function_names[*func_i], BUF_SIZE)) {
+    (*func_i)++;
+  }
+}
