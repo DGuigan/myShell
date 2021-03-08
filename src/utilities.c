@@ -60,25 +60,92 @@ void background_execution_check(char* cmds[], int *cmdc, int *wait)
 }
 
 
-void new_process(char* cmds[], int cmdc, func_ptr cur_function, int wait)
+void redirection_check(char* cmds[], int *cmdc, char* redirections[])
+{
+  char* in = "<";	// symbol for input redirection
+  char* out = ">";	// symbol for output redirection with truncate
+  char* outA = ">>";	// symbol for output redirection with append
+
+  // check cmds for redirection symbols and records files in redirections array
+  for (int i = 0; i < *cmdc - 1; i++) {
+
+    if (strncmp(in, cmds[i], BUF_SIZE) == 0) {
+      redirections[0] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
+      strcpy(redirections[0], cmds[i + 1]);
+    }
+    else if (strncmp(out, cmds[i], BUF_SIZE) == 0) {
+      redirections[1] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
+      redirections[2] = (char*) malloc(sizeof(char) * 2);
+      strcpy(redirections[1], cmds[i + 1]);
+      strcpy(redirections[2], "w");
+    }
+    else if (strncmp(outA, cmds[i], BUF_SIZE) == 0) {
+      redirections[1] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
+      redirections[2] = (char*) malloc(sizeof(char) * 2);
+      strcpy(redirections[1], cmds[i + 1]);
+      strcpy(redirections[2], "a");
+    }
+  }
+ 
+  // remove unnecessary items from cmds array
+  for (int i = 0; i < 2; i++) {
+    if (redirections[i] != NULL) {
+      free_array(cmds, *cmdc - 2, *cmdc);
+      *cmdc -= 2;
+    }
+  }
+}
+
+
+void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirections[], int wait)
 {
   pid_t pid;
   int status;
 
-  switch (pid = fork()) {
-    case -1:
+  switch (pid = fork()) {	// fork new process
+    case -1:			//stop if error
       printf("failed fork\n");
       return;
     case 0:
-      if (cur_function == NULL) {
-        cmds[cmdc] = NULL;	// append NULL to cmds for use with exec function
+      change_streams(redirections);
+      if (cur_function == NULL) {	// if not internal function then exec
+        cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
         execvp(cmds[0], cmds);
       }
       cur_function(cmds, cmdc);
       exit(0);
-    default:
+    default:				// parent process either waits for child or continues
       if (wait) {
         waitpid(pid, &status, WUNTRACED);
       }
+  }
+}
+
+void change_streams(char* redirections[])
+{
+  if (redirections[0]) {
+    if (access(redirections[0], R_OK) == 0) {
+      freopen(redirections[0], "r", stdin);
+      printf("set in: %s\n", redirections[0]);
+    }
+    else if (access(redirections[0], F_OK) == 0) {
+      printf("File cannot be read\n");
+      exit(0);
+    }
+    else {
+      printf("File does not exist\n");
+      exit(0);
+    }
+  }
+
+  if (redirections[1]) {
+    if (access(redirections[1], F_OK) == 0 && access(redirections[1], W_OK) != 0) {
+      printf("File cannot be written to\n");
+      exit(0);
+    }
+    else {
+      freopen(redirections[1], redirections[2], stdout);
+      printf("set out: %s\n", redirections[1]);
+    }
   }
 }

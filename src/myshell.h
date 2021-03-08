@@ -23,7 +23,11 @@ void get_function(char* cmd, char* function_names[], int* func_i);
 
 void background_execution_check(char* cmds[], int *cmdc, int *wait);
 
-void new_process(char* cmds[], int cmdc, func_ptr cur_function, int wait);
+void redirection_check(char* cmds[], int *cmdc, char* redirections[]);
+
+void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirections[], int wait);
+
+void change_streams(char* redirections[]);
 
 // internal commands
 void myclr(char* cmds[], int cmdc);

@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
   func_ptr cur_function;								// pointer to desired function
   int func_i = 0;
 
+  char* redirections[3]; 	// string array of redirections of form {in, out, out_type}
+
   int wait = 1;			// boolean to control background execution
 
   int running = 1;		// boolean to control main loop
@@ -21,6 +23,11 @@ int main(int argc, char* argv[])
   set_environment_variables(argv[0]);	// sets the SHELL environment variable and creates MAN_PATH, a path to the manual
 
   while(running) {
+
+    // reset contents of redirections array
+    for (int i = 0; i < 3; i++) {
+      redirections[i] = NULL;
+    }
 
     printf("%s %s ", getenv("PWD"), prompt); 	// prints prompt to screen
 
@@ -39,9 +46,13 @@ int main(int argc, char* argv[])
         else {
           get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
 
-          background_execution_check(cmds, &cmdc, &wait);
+          background_execution_check(cmds, &cmdc, &wait);	// check if background execution requested
 
-          new_process(cmds, cmdc, functions[func_i], wait);	// spawns new process with desired functionality 
+          redirection_check(cmds, &cmdc, redirections);		// check from io redirection
+
+          new_process(cmds, cmdc, functions[func_i], redirections, wait);	// spawns new process with desired functionality
+
+          free_array(redirections, 0, 3);			// free contents of redirections array
         }
       }
       free_array(cmds, 0, cmdc);
