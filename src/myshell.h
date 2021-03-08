@@ -11,6 +11,8 @@ extern char** environ;
 
 typedef void (*func_ptr)(char*[], int);
 
+void set_shell_path(char* path);
+
 void get_cmds(char* buffer, char* cmds[], int* cmdc);
 
 void free_array(char* array[], int start, int end);

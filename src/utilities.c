@@ -1,5 +1,14 @@
 #include "myshell.h"
 
+
+void set_shell_path(char* path)
+{
+  char full_path[BUF_SIZE];
+  realpath(path, full_path);
+  setenv("SHELL", full_path, 1);
+}
+
+
 void get_cmds(char* buffer, char* cmds[], int* cmdc)
 {
   *cmdc = 0;		// reset command count to zero
@@ -20,12 +29,14 @@ void get_cmds(char* buffer, char* cmds[], int* cmdc)
   cmds[*cmdc] = NULL;
 }
 
+
 void free_array(char* array[], int start, int end)
 {
   for (int i = start; i < end; i++) {
     free(array[i]);
   }
 }
+
 
 void get_function(char* cmd, char* function_names[], int* func_i)
 {

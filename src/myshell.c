@@ -16,6 +16,8 @@ int main(int argc, char* argv[])
 
   int running = 1;		// boolean to control main loop
 
+  set_shell_path(argv[0]);	// sets the SHELL environment variable to the full path of myshell
+
   while(running) {
 
     printf("%s %s ", getenv("PWD"), prompt); 	// prints prompt to screen
