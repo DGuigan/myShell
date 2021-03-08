@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
   func_ptr cur_function;								// pointer to desired function
   int func_i = 0;
 
+  int wait = 1;			// boolean to control background execution
+
   int running = 1;		// boolean to control main loop
 
   set_environment_variables(argv[0]);	// sets the SHELL environment variable and creates MAN_PATH, a path to the manual
@@ -26,7 +28,7 @@ int main(int argc, char* argv[])
 
       get_cmds(buffer, cmds, &cmdc);	// fill cmds array with tokenised input
 
-      if (cmds[0] != NULL) {		// check for command
+      if (cmdc > 0) {		// check for command
 
         if (strncmp("quit", cmds[0], BUF_SIZE) == 0) {
           running = 0;
@@ -37,9 +39,9 @@ int main(int argc, char* argv[])
         else {
           get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
 
-          if (functions[func_i] != NULL) {
-            functions[func_i](cmds, cmdc);
-          }
+          background_execution_check(cmds, &cmdc, &wait);
+
+          new_process(cmds, cmdc, functions[func_i], wait);	// spawns new process with desired functionality 
         }
       }
       free_array(cmds, 0, cmdc);

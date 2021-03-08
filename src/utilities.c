@@ -29,10 +29,6 @@ void get_cmds(char* buffer, char* cmds[], int* cmdc)
     tmp = strtok(NULL, DELIM);
     (*cmdc)++;
   }
-
-  // add NULL pointer to cmds array for ease of use with exec function
-  cmds[*cmdc] = (char*) malloc(sizeof(NULL));
-  cmds[*cmdc] = NULL;
 }
 
 
@@ -50,5 +46,39 @@ void get_function(char* cmd, char* function_names[], int* func_i)
 
   while (function_names[*func_i] != NULL && strncmp(cmd, function_names[*func_i], BUF_SIZE)) {
     (*func_i)++;
+  }
+}
+
+
+void background_execution_check(char* cmds[], int *cmdc, int *wait)
+{
+  if (strcmp("&", cmds[*cmdc - 1]) == 0) {
+    *wait = 0;
+    free_array(cmds, *cmdc - 1, *cmdc);
+    (*cmdc)--;
+  }
+}
+
+
+void new_process(char* cmds[], int cmdc, func_ptr cur_function, int wait)
+{
+  pid_t pid;
+  int status;
+
+  switch (pid = fork()) {
+    case -1:
+      printf("failed fork\n");
+      return;
+    case 0:
+      if (cur_function == NULL) {
+        cmds[cmdc] = NULL;	// append NULL to cmds for use with exec function
+        execvp(cmds[0], cmds);
+      }
+      cur_function(cmds, cmdc);
+      exit(0);
+    default:
+      if (wait) {
+        waitpid(pid, &status, WUNTRACED);
+      }
   }
 }

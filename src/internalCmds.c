@@ -16,10 +16,11 @@ void myenviron(char* cmds[], int cmdc)
 
 void myecho(char* cmds[], int cmdc)
 {
-  for (int i = 1; i < cmdc - 1; i++) {
+  int i;
+  for (i = 1; i < cmdc - 1; i++) {
     printf("%s ", cmds[i]);
   }
-  printf("%s\n", (cmdc == 1 ? "" : cmds[cmdc - 1]));
+  printf("%s\n", (cmdc == 1 ? "" : cmds[i]));
 }
 
 
@@ -34,7 +35,6 @@ void myhelp(char* cmds[], int cmdc)
 void mypause(char* cmds[], int cmdc)
 {
   char buffer;
-  int enter_pressed = 0;
   printf("Shell paused...Enter to continue");
   while (scanf("%c", &buffer) && buffer != '\n');
 }
