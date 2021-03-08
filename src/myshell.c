@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
   int running = 1;		// boolean to control main loop
 
-  set_shell_path(argv[0]);	// sets the SHELL environment variable to the full path of myshell
+  set_environment_variables(argv[0]);	// sets the SHELL environment variable and creates MAN_PATH, a path to the manual
 
   while(running) {
 

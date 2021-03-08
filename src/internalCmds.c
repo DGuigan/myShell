@@ -25,7 +25,9 @@ void myecho(char* cmds[], int cmdc)
 
 void myhelp(char* cmds[], int cmdc)
 {
-  execlp("more", "more", "../readme.md", NULL);
+  char cmd[BUF_SIZE];
+  sprintf(cmd, "more %s", getenv("MAN_PATH"));
+  system(cmd);
 }
 
 
