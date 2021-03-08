@@ -28,3 +28,5 @@ void myhelp(char* cmds[], int cmdc);
 
 void mypause(char* cmds[], int cmdc);
 
+void mycd(char* cmds[], int cmdc);
+

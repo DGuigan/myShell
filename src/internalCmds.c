@@ -37,3 +37,14 @@ void mypause(char* cmds[], int cmdc)
   while (scanf("%c", &buffer) && buffer != '\n');
 }
 
+void mycd(char* cmds[], int cmdc)
+{
+  if (cmdc == 1) {		// if no arguments just print current directory
+    printf("%s\n", getenv("PWD"));
+    return;
+  }
+  char path[BUF_SIZE];
+  chdir(cmds[1]);		// change directory
+  getcwd(path, BUF_SIZE);	// get path of current directory
+  setenv("PWD", path, 1);	// overwrite previous PWD environment variable
+}

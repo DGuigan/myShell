@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-  char* prompt = "==>";		// shell prompt
+  char* prompt = ">";		// shell prompt
 
   char buffer[BUF_SIZE];	// input line buffer
   
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
   while(running) {
 
-    printf("%s ", prompt); 	// prints prompt to screen
+    printf("%s %s ", getenv("PWD"), prompt); 	// prints prompt to screen
 
     if (fgets(buffer, BUF_SIZE, stdin)) {
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
           running = 0;
         }
         else if (strncmp("cd", cmds[0], BUF_SIZE) == 0) {
-          printf("CD comming soon:)\n");
+          mycd(cmds, cmdc);
         }
         else {
           get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
