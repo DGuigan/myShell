@@ -17,11 +17,16 @@ int main(int argc, char* argv[])
 
     if (fgets(buffer, BUF_SIZE, stdin)) {
 
-      get_cmds(buffer, cmds, &cmdc);
+      get_cmds(buffer, cmds, &cmdc);	// fill cmds array with tokenised input
 
-      for (int i = 0; i < cmdc; i++){
-        printf("cmds %d: %s\n", i, cmds[i]);
+      if (cmds[0] != NULL) {		// check for commands
+
+        for (int i = 0; i < cmdc; i++){
+          printf("cmds %d: %s\n", i, cmds[i]);
+        }
       }
+
+      free_array(cmds, 0, cmdc);
     }
   }
 }
