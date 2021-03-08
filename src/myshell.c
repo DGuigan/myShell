@@ -26,12 +26,19 @@ int main(int argc, char* argv[])
 
       if (cmds[0] != NULL) {		// check for command
 
-        get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
-
-        if (functions[func_i] != NULL) {
-          functions[func_i](cmds, cmdc);
+        if (strncmp("quit", cmds[0], BUF_SIZE) == 0) {
+          running = 0;
         }
-        
+        else if (strncmp("cd", cmds[0], BUF_SIZE) == 0) {
+          printf("CD comming soon:)\n");
+        }
+        else {
+          get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
+
+          if (functions[func_i] != NULL) {
+            functions[func_i](cmds, cmdc);
+          }
+        }
       }
       free_array(cmds, 0, cmdc);
     }
