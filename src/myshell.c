@@ -16,7 +16,12 @@ int main(int argc, char* argv[])
     printf("%s ", prompt); 	// prints prompt to screen
 
     if (fgets(buffer, BUF_SIZE, stdin)) {
-      printf("You entered: %s", buffer);
+
+      get_cmds(buffer, cmds, &cmdc);
+
+      for (int i = 0; i < cmdc; i++){
+        printf("cmds %d: %s\n", i, cmds[i]);
+      }
     }
   }
 }
