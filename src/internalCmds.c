@@ -26,9 +26,7 @@ void myecho(char* cmds[], int cmdc)
 
 void myhelp(char* cmds[], int cmdc)
 {
-  char cmd[BUF_SIZE];
-  sprintf(cmd, "more %s", getenv("MAN_PATH"));
-  system(cmd);
+  execlp("more", "more", getenv("MAN_PATH"), NULL);
 }
 
 

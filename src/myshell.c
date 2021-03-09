@@ -19,8 +19,17 @@ int main(int argc, char* argv[])
   int wait = 1;			// boolean to control background execution
 
   int running = 1;		// boolean to control main loop
+  int reading_from_file = 0;	// boolean to indicate reading from file
 
   set_environment_variables(argv[0]);	// sets the SHELL environment variable and creates MAN_PATH, a path to the manual
+
+  if (argc == 2) {		// if file passed as argument set as stdin
+    reading_from_file = 1;
+    redirections[0] = argv[1];
+    redirections[1] = NULL;
+
+    change_streams(redirections);
+  }  
 
   while(running) {
 
@@ -29,9 +38,11 @@ int main(int argc, char* argv[])
       redirections[i] = NULL;
     }
 
-    printf("%s %s ", getenv("PWD"), prompt); 	// prints prompt to screen
+    if (!reading_from_file) {	// prints prompt to screen if not reading from file
+      printf("%s %s ", getenv("PWD"), prompt);
+    }	
 
-    if (fgets(buffer, BUF_SIZE, stdin)) {
+    if (fgets(buffer, BUF_SIZE, stdin) && !feof(stdin)) {
 
       get_cmds(buffer, cmds, &cmdc);	// fill cmds array with tokenised input
 
@@ -56,6 +67,9 @@ int main(int argc, char* argv[])
         }
       }
       free_array(cmds, 0, cmdc);
+    }
+    else if (feof(stdin)) {
+      running = 0;
     }
   }
 }
