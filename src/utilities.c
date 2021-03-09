@@ -104,7 +104,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
 
   switch (pid = fork()) {	// fork new process
     case -1:			//stop if error
-      printf("failed fork\n");
+      report_error("failed to fork", 0);
       return;
     case 0:
       change_streams(redirections);
@@ -123,29 +123,33 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
 
 void change_streams(char* redirections[])
 {
-  if (redirections[0]) {
-    if (access(redirections[0], R_OK) == 0) {
+  if (redirections[0]) {			// check for input redirection
+    if (access(redirections[0], R_OK) == 0) {	// check if file exists and can be read
       freopen(redirections[0], "r", stdin);
-      printf("set in: %s\n", redirections[0]);
     }
-    else if (access(redirections[0], F_OK) == 0) {
-      printf("File cannot be read\n");
-      exit(0);
+    else if (access(redirections[0], F_OK) == 0) { // check if file exists
+      report_error(strcat("Denied read permissions - ", redirections[0]), 1);
     }
     else {
-      printf("File does not exist\n");
-      exit(0);
+      report_error(strcat("File does not exist - ", redirections[0]), 1);
     }
   }
 
-  if (redirections[1]) {
-    if (access(redirections[1], F_OK) == 0 && access(redirections[1], W_OK) != 0) {
-      printf("File cannot be written to\n");
-      exit(0);
+  if (redirections[1]) {			// check for output redirection
+    if (access(redirections[1], F_OK) == 0 && access(redirections[1], W_OK) != 0) { // check if file exists and cannot be written to
+      report_error(strcat("Denied write permissions - ", redirections[1]), 1);
     }
     else {
       freopen(redirections[1], redirections[2], stdout);
-      printf("set out: %s\n", redirections[1]);
     }
+  }
+}
+
+void report_error(char* msg, int severity)
+{
+  fprintf(stderr, msg);	// print error to stderr
+
+  if (severity) {	// kill process if necessary
+    exit(1);
   }
 }

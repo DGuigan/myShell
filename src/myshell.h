@@ -29,6 +29,8 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
 
 void change_streams(char* redirections[]);
 
+void report_error(char* msg, int severity);
+
 // internal commands
 void myclr(char* cmds[], int cmdc);
 
