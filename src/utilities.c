@@ -110,6 +110,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
       setenv("PARENT", getenv("SHELL"), 1);  // creates required evironment variable for child process
       change_streams(redirections);
       if (cur_function == NULL) {	// if not internal function then exec
+        valid_cmd(cmds[0]);		// check if command is valid
         cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
         execvp(cmds[0], cmds);
       }
@@ -121,6 +122,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
       }
   }
 }
+
 
 void change_streams(char* redirections[])
 {
@@ -146,10 +148,32 @@ void change_streams(char* redirections[])
   }
 }
 
+void valid_cmd(char* cmd)
+{
+  char paths_copy[BUF_SIZE];;
+  strncpy(paths_copy, getenv("PATH"), BUF_SIZE);  // copy PATH variable so it isn't destroyed by strtok
+  char path[BUF_SIZE];
+  char* path_start = strtok(paths_copy, ":");
+
+  while (path_start != NULL) {		// check for command on system paths
+    sprintf(path, "%s/%s", path_start, cmd);
+    if (access(path, X_OK) == 0) {
+      return;
+    }
+    path_start = strtok(NULL, ":");
+  }
+  
+  if (access(cmd, X_OK) == 0) {		// check for command locally
+    return;
+  }
+  
+  report_error("invalid command", 1);	// if command not found/executable report error
+}
+
+
 void report_error(char* msg, int severity)
 {
-  fprintf(stderr, msg);	// print error to stderr
-  printf("\n");
+  fprintf(stderr, "Error: %s\n", msg);	// print error to stderr
 
   if (severity) {	// kill process if necessary
     exit(1);
