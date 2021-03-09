@@ -107,6 +107,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
       report_error("failed to fork", 0);
       return;
     case 0:
+      setenv("PARENT", getenv("SHELL"), 1);  // creates required evironment variable for child process
       change_streams(redirections);
       if (cur_function == NULL) {	// if not internal function then exec
         cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
@@ -128,16 +129,16 @@ void change_streams(char* redirections[])
       freopen(redirections[0], "r", stdin);
     }
     else if (access(redirections[0], F_OK) == 0) { // check if file exists
-      report_error(strcat("Denied read permissions - ", redirections[0]), 1);
+      report_error("Denied read permissions for input file", 1);
     }
     else {
-      report_error(strcat("File does not exist - ", redirections[0]), 1);
+      report_error("Input file does no exist", 1);
     }
   }
 
   if (redirections[1]) {			// check for output redirection
     if (access(redirections[1], F_OK) == 0 && access(redirections[1], W_OK) != 0) { // check if file exists and cannot be written to
-      report_error(strcat("Denied write permissions - ", redirections[1]), 1);
+      report_error("Denied write permissions for output file", 1);
     }
     else {
       freopen(redirections[1], redirections[2], stdout);
@@ -148,6 +149,7 @@ void change_streams(char* redirections[])
 void report_error(char* msg, int severity)
 {
   fprintf(stderr, msg);	// print error to stderr
+  printf("\n");
 
   if (severity) {	// kill process if necessary
     exit(1);
