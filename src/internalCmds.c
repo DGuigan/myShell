@@ -4,7 +4,7 @@
 void mydir(char* cmds[], int cmdc)
 {
   // replace process with ls, use current directory if none supplied
-  execlp("ls", "ls", (cmdc == 1 ? "." : cmds[1]), NULL);
+  execlp("ls", "ls", "-al", (cmdc == 1 ? "." : cmds[1]), NULL);
 }
 
 
