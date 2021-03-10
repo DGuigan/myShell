@@ -82,21 +82,24 @@ void redirection_check(char* cmds[], int *cmdc, char* redirections[])
       redirections[0] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
       strcpy(redirections[0], cmds[i + 1]);
     }
-    else if (strncmp(out, cmds[i], BUF_SIZE) == 0) {
+    else if (strncmp(out, cmds[i], BUF_SIZE) == 0 || strncmp(outA, cmds[i], BUF_SIZE) == 0) {
       redirections[1] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
       redirections[2] = (char*) malloc(sizeof(char) * 2);
+
       strcpy(redirections[1], cmds[i + 1]);
-      strcpy(redirections[2], "w");
-    }
-    else if (strncmp(outA, cmds[i], BUF_SIZE) == 0) {
-      redirections[1] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
-      redirections[2] = (char*) malloc(sizeof(char) * 2);
-      strcpy(redirections[1], cmds[i + 1]);
-      strcpy(redirections[2], "a");
+
+      if (strncmp(out, cmds[i], BUF_SIZE) == 0) {
+        strcpy(redirections[2], "w");
+      }
+      else {
+        strcpy(redirections[2], "a");
+      }
     }
   }
  
   // remove unnecessary items from cmds array
+  // doing this assumes redirection symbol is always followed by filename
+  // items in cmds would be incorrectly lost if just symbol is entered without filename
   for (int i = 0; i < 2; i++) {
     if (redirections[i] != NULL) {
       free_array(cmds, *cmdc - 2, *cmdc);
