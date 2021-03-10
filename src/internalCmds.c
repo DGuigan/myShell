@@ -3,6 +3,7 @@
 
 void mydir(char* cmds[], int cmdc)
 {
+  // replace process with ls, use current directory if none supplied
   execlp("ls", "ls", (cmdc == 1 ? "." : cmds[1]), NULL);
 }
 
@@ -24,9 +25,11 @@ void myenviron(char* cmds[], int cmdc)
 void myecho(char* cmds[], int cmdc)
 {
   int i;
+  // print all but first and last strings in cmds array
   for (i = 1; i < cmdc - 1; i++) {
     printf("%s ", cmds[i]);
   }
+  // print last string in cmds array with newline
   printf("%s\n", (cmdc == 1 ? "" : cmds[i]));
 }
 

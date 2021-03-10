@@ -10,8 +10,8 @@
 
 void set_environment_variables(char* path)
 {
-  char bin_path[BUF_SIZE];// string to hold full path to myshell executable
-  char man_path[BUF_SIZE];// string to hold full path to manual
+  char bin_path[BUF_SIZE];	// string to hold full path to myshell executable
+  char man_path[BUF_SIZE];	// string to hold full path to manual
 
   realpath(path, bin_path);		// get the full path of the myshell execuatable
   setenv("SHELL", bin_path, 1);		// overwrites the previous SHELL environment variable
@@ -49,7 +49,7 @@ void free_array(char* array[], int start, int end)
 
 void get_function(char* cmd, char* function_names[], int* func_i)
 {
-  *func_i = 0;// reset function index to 0
+  *func_i = 0;	// reset function index to 0
 
   // loop through array of function names until cmd matches a name or end of array
   while (function_names[*func_i] != NULL && strncmp(cmd, function_names[*func_i], BUF_SIZE)) {
@@ -60,8 +60,8 @@ void get_function(char* cmd, char* function_names[], int* func_i)
 
 void background_execution_check(char* cmds[], int *cmdc, int *wait)
 {
-  if (strcmp("&", cmds[*cmdc - 1]) == 0) {// check if final cmd is &
-    *wait = 0;// set wait variable to 0
+  if (strcmp("&", cmds[*cmdc - 1]) == 0) {	// check if final cmd is &
+    *wait = 0;	// set wait variable to 0
     // remove unneeded item from cmds array
     free_array(cmds, *cmdc - 1, *cmdc);
     (*cmdc)--;
@@ -108,8 +108,8 @@ void redirection_check(char* cmds[], int *cmdc, char* redirections[])
 
 void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirections[], int wait)
 {
-  pid_t pid;// ID of child process
-  int status;// status of child process
+  pid_t pid;	// ID of child process
+  int status;	// status of child process
 
   switch (pid = fork()) {	// fork new process and record process ID
     case -1:		 //stop if error
@@ -117,14 +117,14 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
       return;
     case 0:
       setenv("PARENT", getenv("SHELL"), 1);  // creates required evironment variable for child process
-      change_streams(redirections);// change io streams
+      change_streams(redirections);	// change io streams
       if (cur_function == NULL) {	// if not internal function then exec
         valid_cmd(cmds[0]);		// check if command is valid
         cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
         execvp(cmds[0], cmds);
       }
-      cur_function(cmds, cmdc); // if internal command then call function
-      exit(0);// exit since above function will return unlike exec
+      cur_function(cmds, cmdc);		// if internal command then call function
+      exit(0);				// exit since above function will return unlike exec
     default:				// parent process either waits for child or continues
       if (wait) {
         waitpid(pid, &status, WUNTRACED);
@@ -168,8 +168,8 @@ void valid_cmd(char* cmd)
 
   // check for command on system paths
   while (path_start != NULL) {
-    sprintf(path, "%s/%s", path_start, cmd);// append desired command to path and store in path
-    if (access(path, X_OK) == 0) {// return if command exists and is exectuable
+    sprintf(path, "%s/%s", path_start, cmd);	// append desired command to path and store in path
+    if (access(path, X_OK) == 0) {		// return if command exists and is exectuable
       return;
     }
     path_start = strtok(NULL, ":");
