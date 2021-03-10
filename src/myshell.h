@@ -34,6 +34,9 @@ void valid_cmd(char* cmd);
 void report_error(char* msg, int severity);
 
 // internal commands
+
+void mydir(char* cmds[], int cmdc);
+
 void myclr(char* cmds[], int cmdc);
 
 void myenviron(char* cmds[], int cmdc);

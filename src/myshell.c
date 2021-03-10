@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
   char* cmds[MAX_CMDS];		// string array to hold tokenised input
   int cmdc = 0;			// length of cmds array
 
-  func_ptr functions[] = {&myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
-  char* function_names[] = {"clr", "environ", "echo", "help", "pause", NULL};			// string array of function aliases, order must match functions array
+  func_ptr functions[] = {&mydir, &myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
+  char* function_names[] = {"dir", "clr", "environ", "echo", "help", "pause", NULL};		// string array of function aliases, order must match functions array
   func_ptr cur_function;								// pointer to desired function
   int func_i = 0;
 

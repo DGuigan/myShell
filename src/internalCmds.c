@@ -1,5 +1,12 @@
 #include "myshell.h"
 
+
+void mydir(char* cmds[], int cmdc)
+{
+  execlp("ls", "ls", (cmdc == 1 ? "." : cmds[1]), NULL);
+}
+
+
 void myclr(char* cmds[], int cmdc)
 {
   system("clear");
