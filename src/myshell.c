@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
 
   func_ptr functions[] = {&mydir, &myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
   char* function_names[] = {"dir", "clr", "environ", "echo", "help", "pause", NULL};		// string array of function aliases, order must match functions array
-  func_ptr cur_function;								// pointer to desired function
-  int func_i = 0;
+  func_ptr cur_function;// pointer to desired function
+  int func_i = 0;// index to be set to desired function in above arrays 
 
   char* redirections[3]; 	// string array of redirections of form {in, out, out_type}
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
   set_environment_variables(argv[0]);	// sets the SHELL environment variable and creates MAN_PATH, a path to the manual
 
-  if (argc == 2) {		// if file passed as argument set as stdin
+  if (argc == 2) {		// change stdin if file passed as argument
     reading_from_file = 1;
     redirections[0] = argv[1];
     redirections[1] = NULL;
@@ -73,9 +73,9 @@ int main(int argc, char* argv[])
           free_array(redirections, 0, 3);			// free contents of redirections array
         }
       }
-      free_array(cmds, 0, cmdc);
+      free_array(cmds, 0, cmdc);// free contents of cmds array
     }
-    else if (feof(stdin)) {
+    else if (feof(stdin)) {// if end of file reached stop main loop
       running = 0;
     }
   }

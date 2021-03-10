@@ -10,8 +10,8 @@
 
 void set_environment_variables(char* path)
 {
-  char bin_path[BUF_SIZE];
-  char man_path[BUF_SIZE];
+  char bin_path[BUF_SIZE];// string to hold full path to myshell executable
+  char man_path[BUF_SIZE];// string to hold full path to manual
 
   realpath(path, bin_path);		// get the full path of the myshell execuatable
   setenv("SHELL", bin_path, 1);		// overwrites the previous SHELL environment variable
@@ -49,8 +49,9 @@ void free_array(char* array[], int start, int end)
 
 void get_function(char* cmd, char* function_names[], int* func_i)
 {
-  *func_i = 0;
+  *func_i = 0;// reset function index to 0
 
+  // loop through array of function names until cmd matches a name or end of array
   while (function_names[*func_i] != NULL && strncmp(cmd, function_names[*func_i], BUF_SIZE)) {
     (*func_i)++;
   }
@@ -59,8 +60,9 @@ void get_function(char* cmd, char* function_names[], int* func_i)
 
 void background_execution_check(char* cmds[], int *cmdc, int *wait)
 {
-  if (strcmp("&", cmds[*cmdc - 1]) == 0) {
-    *wait = 0;
+  if (strcmp("&", cmds[*cmdc - 1]) == 0) {// check if final cmd is &
+    *wait = 0;// set wait variable to 0
+    // remove unneeded item from cmds array
     free_array(cmds, *cmdc - 1, *cmdc);
     (*cmdc)--;
   }
@@ -73,7 +75,7 @@ void redirection_check(char* cmds[], int *cmdc, char* redirections[])
   char* out = ">";	// symbol for output redirection with truncate
   char* outA = ">>";	// symbol for output redirection with append
 
-  // check cmds for redirection symbols and records files in redirections array
+  // check cmds for redirection symbols and record files in redirections array
   for (int i = 0; i < *cmdc - 1; i++) {
 
     if (strncmp(in, cmds[i], BUF_SIZE) == 0) {
@@ -106,23 +108,23 @@ void redirection_check(char* cmds[], int *cmdc, char* redirections[])
 
 void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirections[], int wait)
 {
-  pid_t pid;
-  int status;
+  pid_t pid;// ID of child process
+  int status;// status of child process
 
-  switch (pid = fork()) {	// fork new process
-    case -1:			//stop if error
+  switch (pid = fork()) {	// fork new process and record process ID
+    case -1:		 //stop if error
       report_error("failed to fork", 0);
       return;
     case 0:
       setenv("PARENT", getenv("SHELL"), 1);  // creates required evironment variable for child process
-      change_streams(redirections);
+      change_streams(redirections);// change io streams
       if (cur_function == NULL) {	// if not internal function then exec
         valid_cmd(cmds[0]);		// check if command is valid
         cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
         execvp(cmds[0], cmds);
       }
-      cur_function(cmds, cmdc);
-      exit(0);
+      cur_function(cmds, cmdc); // if internal command then call function
+      exit(0);// exit since above function will return unlike exec
     default:				// parent process either waits for child or continues
       if (wait) {
         waitpid(pid, &status, WUNTRACED);
@@ -149,7 +151,7 @@ void change_streams(char* redirections[])
     if (access(redirections[1], F_OK) == 0 && access(redirections[1], W_OK) != 0) { // check if file exists and cannot be written to
       report_error("Denied write permissions for output file", 1);
     }
-    else {
+    else { // file either exists and can be written to or does not and will be created
       freopen(redirections[1], redirections[2], stdout);
     }
   }
@@ -157,14 +159,17 @@ void change_streams(char* redirections[])
 
 void valid_cmd(char* cmd)
 {
-  char paths_copy[BUF_SIZE];;
-  strncpy(paths_copy, getenv("PATH"), BUF_SIZE);  // copy PATH variable so it isn't destroyed by strtok
-  char path[BUF_SIZE];
-  char* path_start = strtok(paths_copy, ":");
+  // copy PATH variable so it isn't destroyed by strtok
+  char paths_copy[BUF_SIZE];
+  strncpy(paths_copy, getenv("PATH"), BUF_SIZE);
 
-  while (path_start != NULL) {		// check for command on system paths
-    sprintf(path, "%s/%s", path_start, cmd);
-    if (access(path, X_OK) == 0) {
+  char path[BUF_SIZE]; // string to hold next path to be checked
+  char* path_start = strtok(paths_copy, ":"); // string to hold beginning of path
+
+  // check for command on system paths
+  while (path_start != NULL) {
+    sprintf(path, "%s/%s", path_start, cmd);// append desired command to path and store in path
+    if (access(path, X_OK) == 0) {// return if command exists and is exectuable
       return;
     }
     path_start = strtok(NULL, ":");
