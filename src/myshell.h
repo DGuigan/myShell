@@ -1,3 +1,10 @@
+/*
+*  Name: David McGuigan
+*  Student ID: 19425942
+*
+*  I hereby acknowledge the DCU Academic Integrity Policy
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
