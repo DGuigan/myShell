@@ -1,3 +1,10 @@
+/*
+*  Name: David McGuigan
+*  Student ID: 19425942
+*
+*  I hereby acknowledge the DCU Academic Integrity Policy
+*/
+
 #include "myshell.h"
 
 
