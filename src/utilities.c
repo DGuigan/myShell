@@ -78,16 +78,16 @@ void redirection_check(char* cmds[], int *cmdc, char* redirections[])
   // check cmds for redirection symbols and record files in redirections array
   for (int i = 0; i < *cmdc - 1; i++) {
 
-    if (strncmp(in, cmds[i], BUF_SIZE) == 0) {
+    if (strncmp(in, cmds[i], BUF_SIZE) == 0) { // if input redirection then record filename/next argument
       redirections[0] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
       strcpy(redirections[0], cmds[i + 1]);
     }
-    else if (strncmp(out, cmds[i], BUF_SIZE) == 0 || strncmp(outA, cmds[i], BUF_SIZE) == 0) {
+    else if (strncmp(out, cmds[i], BUF_SIZE) == 0 || strncmp(outA, cmds[i], BUF_SIZE) == 0) { // if output redirection then record filename/next argument
       redirections[1] = (char*) malloc(sizeof(char) * (strlen(cmds[i + 1]) + 1));
-      redirections[2] = (char*) malloc(sizeof(char) * 2);
-
       strcpy(redirections[1], cmds[i + 1]);
 
+      redirections[2] = (char*) malloc(sizeof(char) * 2);
+      // record appropriate mode in which to open output file
       if (strncmp(out, cmds[i], BUF_SIZE) == 0) {
         strcpy(redirections[2], "w");
       }
