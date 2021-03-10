@@ -60,8 +60,16 @@ void mycd(char* cmds[], int cmdc)
     printf("%s\n", getenv("PWD"));
     return;
   }
-  char path[BUF_SIZE];
-  chdir(cmds[1]);		// change directory
-  getcwd(path, BUF_SIZE);	// get path of current directory
-  setenv("PWD", path, 1);	// overwrite previous PWD environment variable
+  // check if directory exists by trying to access it
+  DIR* dir_ptr = opendir(cmds[1]);
+  if (dir_ptr) {		// if dir_ptr is not NULL the directory exists
+    closedir(dir_ptr);		// close directory
+    char path[BUF_SIZE];
+    chdir(cmds[1]);		// change directory
+    getcwd(path, BUF_SIZE);	// get path of current directory
+    setenv("PWD", path, 1);	// overwrite previous PWD environment variable
+  }
+  else {
+    report_error("invalid directory", 0);
+  }
 }
