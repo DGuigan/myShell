@@ -10,8 +10,8 @@
 
 void set_environment_variables(char* path)
 {
-  char bin_path[BUF_SIZE];	// string to hold full path to myshell executable
-  char man_path[BUF_SIZE];	// string to hold full path to manual
+  char bin_path[BUF_SIZE];	// character array to hold full path to myshell executable
+  char man_path[BUF_SIZE];	// character array to hold full path to manual
 
   realpath(path, bin_path);		// get the full path of the myshell execuatable
   setenv("SHELL", bin_path, 1);		// overwrites the previous SHELL environment variable
@@ -166,12 +166,12 @@ void valid_cmd(char* cmd)
   char paths_copy[BUF_SIZE];
   strncpy(paths_copy, getenv("PATH"), BUF_SIZE);
 
-  char path[BUF_SIZE]; // string to hold next path to be checked
-  char* path_start = strtok(paths_copy, ":"); // string to hold beginning of path
+  char path[BUF_SIZE]; // character array to hold next path to be checked
+  char* path_start = strtok(paths_copy, ":"); // character pointer to beginning of path
 
   // check for command on system paths
   while (path_start != NULL) {
-    sprintf(path, "%s/%s", path_start, cmd);	// append desired command to path and store in path
+    sprintf(path, "%s/%s", path_start, cmd);	// construct full possible path and store in path
     if (access(path, X_OK) == 0) {		// return if command exists and is exectuable
       return;
     }

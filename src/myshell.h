@@ -41,7 +41,7 @@ void valid_cmd(char* cmd); // checks if command exists on system path
 
 void report_error(char* msg, int severity); // prints msg to stderr and exits process if severity == 1
 
-// internal commands
+// internal commands //
 
 void mydir(char* cmds[], int cmdc);  // prints contents of specified directory or current directory if no argument
 

@@ -13,15 +13,15 @@ int main(int argc, char* argv[])
 
   char buffer[BUF_SIZE];	// input line buffer
   
-  char* cmds[MAX_CMDS];		// string array to hold tokenised input
+  char* cmds[MAX_CMDS];		// character pointer array to hold tokenised input
   int cmdc = 0;			// length of cmds array
 
   func_ptr functions[] = {&mydir, &myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
-  char* function_names[] = {"dir", "clr", "environ", "echo", "help", "pause", NULL};		// string array of function aliases, order must match functions array
+  char* function_names[] = {"dir", "clr", "environ", "echo", "help", "pause", NULL};		// character pointer array of function aliases, order must match functions array
   func_ptr cur_function;	// pointer to desired function
   int func_i = 0;		// index to be set to desired function in above arrays 
 
-  char* redirections[3]; 	// string array of redirections of form {in, out, out_type}
+  char* redirections[3]; 	// character pointer array of redirections of form {in, out, out_type}
 
   int wait = 1;			// boolean to control background execution
 
