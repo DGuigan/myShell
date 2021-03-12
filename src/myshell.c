@@ -45,6 +45,8 @@ int main(int argc, char* argv[])
       redirections[i] = NULL;
     }
 
+    wait = 1; // reset wait variable to default
+
     if (!reading_from_file) {	// prints prompt to screen if not reading from file
       printf("%s %s ", getenv("PWD"), prompt);
     }	
