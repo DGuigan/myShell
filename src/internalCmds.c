@@ -3,6 +3,9 @@
 *  Student ID: 19425942
 *
 *  I hereby acknowledge the DCU Academic Integrity Policy
+*
+*  Each function in this file is tied to a specific command line function that the user can call.
+*  For general descriptions of each function see their prototypes in myshell.h
 */
 
 #include "myshell.h"

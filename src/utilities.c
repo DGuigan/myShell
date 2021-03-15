@@ -3,6 +3,10 @@
 *  Student ID: 19425942
 *
 *  I hereby acknowledge the DCU Academic Integrity Policy
+*
+*  This file contains code to assist the general function of myshell.
+*  These functions are not specific to any command line operation and cannot be called directly by the user.
+*  For general descriptions of each function see their prototypes in myshell.h
 */
 
 #include "myshell.h"

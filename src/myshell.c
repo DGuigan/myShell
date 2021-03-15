@@ -3,6 +3,8 @@
 *  Student ID: 19425942
 *
 *  I hereby acknowledge the DCU Academic Integrity Policy
+*
+*  This file contains the main loop/user interface of myshell
 */
 
 #include "myshell.h"
