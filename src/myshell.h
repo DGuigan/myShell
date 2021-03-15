@@ -39,7 +39,7 @@ void change_streams(char* redirections[]); // sets stdin and stdout to files sto
 
 void valid_cmd(char* cmd); // checks if command exists on system path
 
-void report_error(char* msg, int severity); // prints msg to stderr and exits process if severity == 1
+void report_error(char* type, char* cause, int severity); // prints type and cause of error to stderr and exits process if severity == 1
 
 // internal commands //
 

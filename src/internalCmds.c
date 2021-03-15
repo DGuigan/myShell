@@ -16,13 +16,13 @@ void myrename(char* cmds[], int cmdc)
   char response;  // char to hold users response to overwriting file
 
   // check if sufficent arguments 
-  if (cmdc < 3) {
-    report_error("Not enough arguments", 1);
+  if (cmdc != 3) {
+    report_error("Invalid arguements", "Usage: rename <filename> <filename>", 1);
   }
 
   // check if file to move exists  
   if (access(cmds[1], F_OK) != 0) {
-    report_error("File does not exist", 1);
+    report_error("File does not exist", cmds[1], 1);
   }
 
   // check if desination name is taken, ask to overwrite
@@ -99,6 +99,6 @@ void mycd(char* cmds[], int cmdc)
     setenv("PWD", path, 1);	// overwrite previous PWD environment variable
   }
   else {
-    report_error("invalid directory", 0);
+    report_error("Invalid directory", cmds[1], 0);
   }
 }
