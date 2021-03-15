@@ -11,6 +11,16 @@
 #include "myshell.h"
 
 
+void mymove(char* cmds[], int cmdc)
+{
+  if (cmdc < 3) {
+    report_error("Not enough arguments", 1);
+  }
+
+  execlp("mv", "mv", cmds[1], cmds[2], NULL);
+}
+
+
 void mydir(char* cmds[], int cmdc)
 {
   // replace process with ls, use current directory if none supplied

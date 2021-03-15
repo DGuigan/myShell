@@ -43,6 +43,8 @@ void report_error(char* msg, int severity); // prints msg to stderr and exits pr
 
 // internal commands //
 
+void mymove(char* cmds[], int cmdc);  // move the contents on the file in first argument to file in second argument
+
 void mydir(char* cmds[], int cmdc);  // prints contents of specified directory or current directory if no argument
 
 void myclr(char* cmds[], int cmdc); // clears the screen
