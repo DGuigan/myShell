@@ -18,6 +18,9 @@ Commands
     dir [path]
         If path is supplied print all contents of path in long form.
         If path is not supplied print all contents of current directory in long form.
+    
+    rename <source file> <destination file>
+        Rename source file to destination file. If destination file exists prompt for overwrite
 
     environ
         Print all environment variables, one per line.

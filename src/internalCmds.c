@@ -11,7 +11,7 @@
 #include "myshell.h"
 
 
-void mymove(char* cmds[], int cmdc)
+void myrename(char* cmds[], int cmdc)
 {
   char response;  // char to hold users response to overwriting file
 
