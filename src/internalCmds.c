@@ -13,11 +13,27 @@
 
 void mymove(char* cmds[], int cmdc)
 {
+  char response;  // char to hold users response to overwriting file
+
+  // check if sufficent arguments 
   if (cmdc < 3) {
     report_error("Not enough arguments", 1);
   }
 
-  execlp("mv", "mv", cmds[1], cmds[2], NULL);
+  // check if file to move exists  
+  if (access(cmds[1], F_OK) != 0) {
+    report_error("File does not exist", 1);
+  }
+
+  // check if desination name is taken, ask to overwrite
+  if (access(cmds[2], F_OK) == 0) {
+    printf("The file %s already exists. Do you wish to overwrite it?[y/n]: ", cmds[2]);
+    
+    scanf(" %c", &response);
+    if (response == 'y') {
+      execlp("mv", "mv", cmds[1], cmds[2], NULL);
+    }
+  }
 }
 
 
