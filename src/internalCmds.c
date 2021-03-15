@@ -17,7 +17,7 @@ void myrename(char* cmds[], int cmdc)
 
   // check if sufficent arguments 
   if (cmdc != 3) {
-    report_error("Invalid arguements", "Usage: rename <filename> <filename>", 1);
+    report_error("Incorrect arguments", "Usage: rename <source file> <destination file>", 1);
   }
 
   // check if file to move exists  
@@ -39,19 +39,31 @@ void myrename(char* cmds[], int cmdc)
 
 void mydir(char* cmds[], int cmdc)
 {
-  // replace process with ls, use current directory if none supplied
-  execlp("ls", "ls", "-al", (cmdc == 1 ? "." : cmds[1]), NULL);
+  if (cmdc > 2) {
+    report_error("Incorrect arguments", "Usage: dir [path]", 1);
+  }
+  if (cmdc != 1 && access(cmds[1], F_OK) != 0) { // check if directory accessible
+    report_error("Invalid directory", cmds[1], 1);
+  }
+ // replace process with ls, use current directory if none supplied
+ execlp("ls", "ls", "-al", (cmdc == 1 ? "." : cmds[1]), NULL);
 }
 
 
 void myclr(char* cmds[], int cmdc)
 {
+  if (cmdc > 1) {
+    report_error("Incorrect arguments", "Usage: clr", 1);
+  }
   system("clear");
 }
 
 
 void myenviron(char* cmds[], int cmdc)
 {
+  if (cmdc > 1) {
+    report_error("Incorrect arguments", "Usage: environ", 1);
+  }
   for (int i = 0; environ[i] != NULL; i++) {
     printf("%s\n", environ[i]);
   }
@@ -72,6 +84,9 @@ void myecho(char* cmds[], int cmdc)
 
 void myhelp(char* cmds[], int cmdc)
 {
+  if (cmdc > 1) {
+    report_error("Incorrect arguments", "Usage: help", 1);
+  }
   execlp("more", "more", getenv("MAN_PATH"), NULL);
 }
 
@@ -79,12 +94,20 @@ void myhelp(char* cmds[], int cmdc)
 void mypause(char* cmds[], int cmdc)
 {
   char buffer;
+
+  if (cmdc > 1) {
+    report_error("Incorrect arguments", "Usage: pause", 1);
+  }
   printf("Shell paused...Enter to continue");
   while (scanf("%c", &buffer) && buffer != '\n');
 }
 
 void mycd(char* cmds[], int cmdc)
 {
+  if (cmdc > 2) {
+    report_error("Incorrect arguments", "Usage: cd [directory]", 0);
+    return;
+  }
   if (cmdc == 1) {		// if no arguments just print current directory
     printf("%s\n", getenv("PWD"));
     return;
