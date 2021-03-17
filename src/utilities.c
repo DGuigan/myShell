@@ -21,7 +21,7 @@ void set_environment_variables(char* path)
   setenv("SHELL", bin_path, 1);		// overwrites the previous SHELL environment variable
 
   bin_path[strlen(bin_path) - 12] = '\0';		// remove "/bin/myshell" from path
-  sprintf(man_path, "%s/manual/readme", bin_path);	// append the remaining path to the manual
+  sprintf(man_path, "%s/manual/readme.md", bin_path);	// append the remaining path to the manual
   setenv("MAN_PATH", man_path, 1);			// create new environment variable with full path to manual
 }
 
