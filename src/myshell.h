@@ -57,4 +57,6 @@ void myhelp(char* cmds[], int cmdc); // uses more command to display user manual
 
 void mypause(char* cmds[], int cmdc); // pauses shell and waits for enter to be pressed
 
-void mycd(char* cmds[], int cmdc); // changes working directory to specified directory, prints current directory if no argument 
+void mycd1(char* cmds[], int cmdc); // prints current directory if no argument
+
+void mycd2(char* cmds[], int cmdc); // changes working directory to specified directory
