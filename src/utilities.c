@@ -118,6 +118,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
   pid_t pid;	// ID of child process
   int status;	// status of child process
 
+  /* Basic concept of forking with switch statement taken from lab 4D: https://ca216.computing.dcu.ie/labs/lab4d */
   switch (pid = fork()) {	// fork new process and record process ID
     case -1:		 //stop if error
       report_error("System error", "Failed to fork", 0);
@@ -131,7 +132,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
         execvp(cmds[0], cmds);
       }
       cur_function(cmds, cmdc);		// if internal command then call function
-      fflush(stdout);                   // force stdout to write to disk
+      fflush(stdout);                   // force stdout to write to disk, without this redirected output is lost on _exit()
       _exit(0);				// exit since above function will return unlike exec
     default:				// parent process either waits for child or continues
       if (wait) {
