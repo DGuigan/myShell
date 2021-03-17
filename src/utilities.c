@@ -117,6 +117,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
 {
   pid_t pid;	// ID of child process
   int status;	// status of child process
+  char* exec_path; // pointer to contain full path to executable
 
   /* Basic concept of forking with switch statement taken from lab 4D: https://ca216.computing.dcu.ie/labs/lab4d */
   switch (pid = fork()) {	// fork new process and record process ID
@@ -124,14 +125,15 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
       report_error("System error", "Failed to fork", 0);
       return;
     case 0:
-      setenv("PARENT", getenv("SHELL"), 1);  // creates required evironment variable for child process
       change_streams(redirections);	// change io streams
       if (cur_function == NULL) {	// if not internal function then exec
-        valid_cmd(cmds[0]);		// check if command is valid
+        exec_path =  valid_cmd(cmds[0]);// check if cmd exists and store its full path
+        setenv("PARENT", exec_path, 1); // set PARENT environment variable
         cmds[cmdc] = NULL;		// append NULL to cmds for use with exec function
-        execvp(cmds[0], cmds);
+        execvp(cmds[0], cmds);		// replace process with desired exectuable
       }
-      cur_function(cmds, cmdc);		// if internal command then call function
+      setenv("PARENT", getenv("SHELL"), 1);  // set PARENT variable to SHELL since the process doesn't leave this exectutable
+      cur_function(cmds, cmdc);		// call desired function
       fflush(stdout);                   // force stdout to write to disk, without this redirected output is lost on _exit()
       _exit(0);				// exit since above function will return unlike exec
     default:				// parent process either waits for child or continues
@@ -166,26 +168,26 @@ void change_streams(char* redirections[])
   }
 }
 
-void valid_cmd(char* cmd)
+char* valid_cmd(char* cmd)
 {
   // copy PATH variable so it isn't destroyed by strtok
   char paths_copy[BUF_SIZE];
   strncpy(paths_copy, getenv("PATH"), BUF_SIZE);
 
-  char path[BUF_SIZE]; // character array to hold next path to be checked
+  char* path = (char*) malloc(sizeof(char) * BUF_SIZE); // character array to hold next path to be checked
   char* path_start = strtok(paths_copy, ":"); // character pointer to beginning of path
 
   // check for command on system paths
   while (path_start != NULL) {
     sprintf(path, "%s/%s", path_start, cmd);	// construct full possible path and store in path
     if (access(path, X_OK) == 0) {		// return if command exists and is exectuable
-      return;
+      return path;				// return the path so it can be set as environment variable
     }
     path_start = strtok(NULL, ":");
   }
   
   if (access(cmd, X_OK) == 0) {		// check for command locally
-    return;
+    return realpath(cmd, NULL);		// build full path to local exectuable and return ptr to it
   }
   
   report_error("Invalid command", cmd, 1);	// if command not found/executable report error
