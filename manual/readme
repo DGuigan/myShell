@@ -6,6 +6,7 @@ Usage
 
 Description
     myshell is a simple command line interpreter that performs the limited number of commands listed below.
+    It accepts one main command per line as well as any required arguments, redirection files and background execution indicator.
 
 Internal Commands
     cd [path]
@@ -33,14 +34,14 @@ Internal Commands
         Suspend operation of shell until enter is pressed.
 
     rename <source file> <destination file>
-        Rename source file to destination file. If destination file exists prompt for overwrite
+        Rename source file to destination file. If destination file exists prompt for overwrite.
 
     quit
         Exits the shell.
     
 External Commands
-    Any command not recognised as an internal command is assumed to be an external, executable.
-    After its existance is verified it and its arguments are executed using the exec function.
+    Any command not recognised as an internal command is assumed to be an external, executable file.
+    After its existance is verified, it is executed with all supplied arguments through the use of the exec function.
 
 Arguments
     Arguements are deliminated by spaces, tabs and newlines.
@@ -58,24 +59,32 @@ Environment Variables
         Each child process created by myshell contains a PARENT variable which corresponds to the SHELL variable above
 
 I/O Redirection
-    After the arguments for a command, a user can redirect input and output in the following ways:
+    After the arguments for a command, a user can specify the redirection of input and output in the following ways:
 
-    cmd [ARGS...] < inputfile
-        myshell will set the input stream for cmd to inputfile
+    cmd [ARGS...] < <inputfile>
+        myshell will set the input stream for cmd to inputfile.
 
-    cmd [ARGS...] > outputfile
+    cmd [ARGS...] > <outputfile>
         myshell will set the output stream for cmd to outputfile, output file will be truncated.
     
-    cmd [ARGS...] >> outputfile
+    cmd [ARGS...] >> <outputfile>
         myshell will set the output stream for cmd to outputfile, output file will be appended to.
     
-    If multiple attempts to redirect input or output are made on a single line then the rightmost of these will be accepted and others treated as arguments to cmd.
-    The redirection symbols "<", ">" and ">>" should never be given as arguments unless immediately followed by the relevent filenames.
+    In general, a maximum of one output and one input file should be specified for each command.
+    If multiple redirection symbols for the same stream are supplied, then the rightmost of these will be used
+    and others treated as normal arguments.
+    
+Batch Mode
+    If a user wishes to automate the use of myshell then a batchfile can be passed as an arguement at execution:
 
-Batchfile
-    If a file is passed as an argument to myshell then the input stream will be set to that file and each line treated as input.
+    myshell <batchfile>
+
+    During batch mode, myshell will read each line of the batchfile as a line of input and exit once it reaches the end of the file.
+    The prompt will not display during batch mode.
 
 Background Execution
+    Every command other than "quit" and "cd" which need to affect the main process are executed on separate child processes.
+    By default, the parent process waits for these child processes to finish exectuing before prompting for further input.
     If a user wishes myshell to perform a task in the background and immediately prompt for further input then they can include an "&" as the final argument of their input.
     An "&" given as an arguement in any position other than the last will be treated as a regular argument.
 
