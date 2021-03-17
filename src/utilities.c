@@ -131,6 +131,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
         execvp(cmds[0], cmds);
       }
       cur_function(cmds, cmdc);		// if internal command then call function
+      fflush(NULL);
       _exit(0);				// exit since above function will return unlike exec
     default:				// parent process either waits for child or continues
       if (wait) {
