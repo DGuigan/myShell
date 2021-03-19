@@ -37,7 +37,7 @@ void new_process(char* cmds[], int cmdc, func_ptr cur_function, char* redirectio
 
 void change_streams(char* redirections[]); // sets stdin and stdout to files stored in redirections array
 
-char*  valid_cmd(char* cmd); // checks if command exists in PATH or locally and return its full path
+void valid_cmd(char* cmd); // checks if command exists on system path
 
 void report_error(char* type, char* cause, int severity); // prints type and cause of error to stderr and exits process if severity == 1
 
