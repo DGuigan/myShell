@@ -102,16 +102,21 @@ void mypause(char* cmds[], int cmdc)
   while (scanf("%c", &buffer) && buffer != '\n');
 }
 
-void mycd(char* cmds[], int cmdc)
+
+// Split cd into two functions because one needs redirection to print directory which happens after fork
+// and the other needs to affect the main/parent directory by changing directory
+
+void mycd1(char* cmds[], int cmdc)
 {
   if (cmdc > 2) {
     report_error("Incorrect arguments", "Usage: cd [directory]", 0);
     return;
   }
-  if (cmdc == 1) {		// if no arguments just print current directory
-    printf("%s\n", getenv("PWD"));
-    return;
-  }
+  printf("%s\n", getenv("PWD")); // print working directory
+}
+
+void mycd2(char* cmds[], int cmdc)
+{ 
   // check if directory exists by trying to access it
   DIR* dir_ptr = opendir(cmds[1]);
   if (dir_ptr) {		// if dir_ptr is not NULL the directory exists

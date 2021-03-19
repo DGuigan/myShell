@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
   char* cmds[MAX_CMDS];		// character pointer array to hold tokenised input
   int cmdc = 0;			// length of cmds array
 
-  func_ptr functions[] = {&myrename, &mydir, &myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
-  char* function_names[] = {"rename", "dir", "clr", "environ", "echo", "help", "pause", NULL};		// character pointer array of function aliases, order must match functions array
+  func_ptr functions[] = {&mycd1, &myrename, &mydir, &myclr, &myenviron, &myecho, &myhelp, &mypause, NULL};	// NULL terminated list of internal commands
+  char* function_names[] = {"cd", "rename", "dir", "clr", "environ", "echo", "help", "pause", NULL};		// character pointer array of function aliases, order must match functions array
   func_ptr cur_function;	// pointer to desired function
   int func_i = 0;		// index to be set to desired function in above arrays 
 
@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
         if (strncmp("quit", cmds[0], BUF_SIZE) == 0) {
           running = 0;
         }
-        else if (strncmp("cd", cmds[0], BUF_SIZE) == 0) {
-          mycd(cmds, cmdc);
+        else if (strncmp("cd", cmds[0], BUF_SIZE) == 0 && cmdc == 2) {
+          mycd2(cmds, cmdc);
         }
         else {
           get_function(cmds[0], function_names, &func_i);	// match first input to internal commands
