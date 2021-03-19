@@ -7,6 +7,8 @@ Usage
 Description
     myshell is a simple command line interpreter that performs the limited number of commands listed below.
     It accepts one main command per line as well as any required arguments, redirection files and background execution indicator.
+    The structure of each input to myshell should be as follows:
+        cmd [args...] [redirection] [background exectution]
 
 Internal Commands
     cd [path]
@@ -44,7 +46,7 @@ External Commands
     After its existance is verified, it is executed with all supplied arguments through the use of the exec function.
 
 Arguments
-    Arguements are deliminated by spaces, tabs and newlines.
+    Arguments are deliminated by spaces, tabs and newlines.
 
 Environment Variables
     myshell inherits all environment variables from its parent process and sets the following custon variables:
@@ -61,23 +63,23 @@ Environment Variables
 I/O Redirection
     After the arguments for a command, a user can specify the redirection of input and output in the following ways:
 
-    cmd [ARGS...] < <inputfile>
+    cmd [ARGS...] < inputfile
         myshell will set the input stream for cmd to inputfile.
 
-    cmd [ARGS...] > <outputfile>
+    cmd [ARGS...] > outputfile
         myshell will set the output stream for cmd to outputfile, output file will be truncated.
     
-    cmd [ARGS...] >> <outputfile>
+    cmd [ARGS...] >> outputfile
         myshell will set the output stream for cmd to outputfile, output file will be appended to.
     
-    In general, a maximum of one output and one input file should be specified for each command.
+    A maximum of one output and one input file should be specified for each command.
     If multiple redirection symbols for the same stream are supplied, then the rightmost of these will be used
     and others treated as normal arguments.
     
 Batch Mode
     If a user wishes to automate the use of myshell then a batchfile can be passed as an arguement at execution:
 
-    myshell <batchfile>
+    myshell batchfile
 
     During batch mode, myshell will read each line of the batchfile as a line of input and exit once it reaches the end of the file.
     The prompt will not display during batch mode.
