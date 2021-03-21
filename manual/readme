@@ -85,7 +85,7 @@ Batch Mode
     The prompt will not display during batch mode.
 
 Background Execution
-    Every command other than "quit" and "cd" which need to affect the main process are executed on separate child processes.
+    Every command other than "quit" and "cd", which need to affect the main process, are executed on separate child processes.
     By default, the parent process waits for these child processes to finish exectuing before prompting for further input.
     If a user wishes myshell to perform a task in the background and immediately prompt for further input then they can include an "&" as the final argument of their input.
     An "&" given as an arguement in any position other than the last will be treated as a regular argument.
