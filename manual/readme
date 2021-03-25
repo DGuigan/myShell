@@ -49,7 +49,9 @@ Arguments
     Arguments are deliminated by spaces, tabs and newlines.
 
 Environment Variables
-    myshell inherits all environment variables (2) from its parent process and sets the following custom variables:
+    Environment variables (2) are global variables available to all programms.
+    They can use these to understand more about how the environment they're in is setup.
+    myshell inherits all environment variables from its parent process and sets the following custom variables:
 
     SHELL
         The full path to the myshell exectutable file
